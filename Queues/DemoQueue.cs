@@ -12,8 +12,8 @@ namespace awsDemos.Queues
         AmazonSQSClient client;
         public DemoQueue()
         {
-            serviceUrl = "https://sqs.ap-south-1.amazonaws.com";
-            queueUrl = "https://sqs.ap-south-1.amazonaws.com/789040496288/demo-queue";
+            serviceUrl = "service url";
+            queueUrl = "queue url";
             config = new AmazonSQSConfig
             {
                 ServiceURL = serviceUrl

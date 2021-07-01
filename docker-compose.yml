@@ -1,0 +1,20 @@
+version: '2.1'
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+      - "${PORT_WEB_UI-7979}:${PORT_WEB_UI-7979}"
+    environment:
+      - SERVICES=${SERVICES- }
+      - DEBUG=${DEBUG- 
+      - DATA_DIR=${DATA_DIR- }
+      - PORT_WEB_UI=${PORT_WEB_UI- }
+      - LAMBDA_EXECUTOR=docker
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DEFAULT_REGION=eu-west-1
+      - LAMBDA_DOCKER_NETWORK=dotnetcore_aws_default
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - /var/run/docker.sock:/var/run/docker.sock
