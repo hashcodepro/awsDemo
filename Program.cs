@@ -6,25 +6,26 @@ using awsDemos.Queues;
 using awsDemos.Tables;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
+using System.Threading.Tasks;
 
 namespace awsDemos
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             // Queue Operations
             // executeQueue();
 
             // DynamoDB Operations
-            // insertIntoTable();
-            // scanTable();
-            // retrieveSpecificRow();
-            // updateRow();
-            // deleteRow();
-            // batchInsert();
-            // batchGet();
-            // getRecordBasedOnCondition();
+            await insertIntoTable();
+            // await scanTable();
+            // await retrieveSpecificRow();
+            // await updateRow();
+            // await deleteRow();
+            // await batchInsert();
+            // await batchGet();
+            // await getRecordBasedOnCondition();
         }
 
         static void executeQueue()
@@ -44,13 +45,13 @@ namespace awsDemos
             }
         }
 
-        static void scanTable()
+        static async Task scanTable()
         {
             try
             {
                 Console.WriteLine("Executing Scan Operation on DemoTable");
 
-                List<Demo> response = new DemoTable().getAllRows().GetAwaiter().GetResult();
+                List<Demo> response = await new DemoTable().getAllRows();
 
                 Console.WriteLine(JsonSerializer.Serialize(response, new JsonSerializerOptions { WriteIndented = true }));
             }
@@ -60,7 +61,7 @@ namespace awsDemos
             }
         }
 
-        static void insertIntoTable()
+        static async Task insertIntoTable()
         {
             try
             {
@@ -68,22 +69,22 @@ namespace awsDemos
 
                 Demo obj = new Demo
                 {
-                    PublicKeySessionId = "uiuieuireu",
+                    PublicKeySessionId = "newDemo001",
                     PublicKey = new PublicKey
                     {
-                        keyId = "8989898",
+                        keyId = "43ljk4jl3",
                         der = new DER
                         {
-                            algorithm = "SHA256",
-                            format = "x.201",
-                            publicKey = "io12io12io12"
+                            algorithm = "SHA5128",
+                            format = "x.901",
+                            publicKey = "asdasd"
                         }
                     },
-                    Created = "30-06-2021",
-                    SetExample = new List<string>() { "element1", "element2", "element3", "element4" }
+                    Created = "02-07-2021",
+                    SetExample = new List<string>() { "demo1", "demo2", "demo3" }
                 };
 
-                new DemoTable().addRow(obj).GetAwaiter();
+                await new DemoTable().addRow(obj);
             }
             catch (Exception e)
             {
@@ -91,13 +92,13 @@ namespace awsDemos
             }
         }
 
-        static void retrieveSpecificRow()
+        static async Task retrieveSpecificRow()
         {
             try
             {
                 Console.WriteLine("Execution Load Operation On DemoTable");
 
-                Demo obj = new DemoTable().getRow("asuirje").GetAwaiter().GetResult();
+                Demo obj = await new DemoTable().getRow("newSessionId001");
 
                 Console.WriteLine(JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true }));
             }
@@ -107,13 +108,13 @@ namespace awsDemos
             }
         }
 
-        static void updateRow()
+        static async Task updateRow()
         {
             try
             {
                 Console.WriteLine("Executing Update Operation On DemoTable");
                 DemoTable table = new DemoTable();
-                Demo obj = table.getRow("asuirje").GetAwaiter().GetResult();
+                Demo obj = await table.getRow("newSessionId001");
                 obj.SetExample.Add("updateExample");
                 table.updateRow(obj).GetAwaiter().GetResult();
             }
@@ -123,15 +124,15 @@ namespace awsDemos
             }
         }
 
-        static void deleteRow()
+        static async Task deleteRow()
         {
             try
             {
                 Console.WriteLine("Executing Delete Operation On Demo Table");
                 DemoTable table = new DemoTable();
-                Demo obj = table.getRow("asdf1234").GetAwaiter().GetResult();
+                Demo obj = await table.getRow("newSessionId002");
 
-                table.DeleteRow(obj).GetAwaiter().GetResult();
+                await table.DeleteRow(obj);
             }
             catch (System.Exception e)
             {
@@ -139,7 +140,7 @@ namespace awsDemos
             }
         }
 
-        static void batchInsert()
+        static async Task batchInsert()
         {
             try
             {
@@ -180,7 +181,7 @@ namespace awsDemos
                     }
                 };
 
-                new DemoTable().BatchInsert(items).GetAwaiter().GetResult();
+                await new DemoTable().BatchInsert(items);
             }
             catch (Exception e)
             {
@@ -188,13 +189,13 @@ namespace awsDemos
             }
         }
 
-        static void batchGet()
+        static async Task batchGet()
         {
             try
             {
                 Console.WriteLine("Executing Batch Get Operation On DemoTable");
                 List<string> items = new List<string>() { "batchinsert002", "asuirje" };
-                List<Demo> demoItems = new DemoTable().BatchRetrieve(items).GetAwaiter().GetResult();
+                List<Demo> demoItems = await new DemoTable().BatchRetrieve(items);
 
                 Console.WriteLine(JsonSerializer.Serialize(demoItems, new JsonSerializerOptions { WriteIndented = true }));
             }
@@ -204,13 +205,13 @@ namespace awsDemos
             }
         }
 
-        static void getRecordBasedOnCondition()
+        static async Task getRecordBasedOnCondition()
         {
             List<ScanCondition> conditions = new List<ScanCondition>
             {
-                new ScanCondition("Created",ScanOperator.Equal,"30-06-2021")
+                new ScanCondition("Created",ScanOperator.Equal,"01-07-2021")
             };
-            List<Demo> items = new DemoTable()._dynamoDBService.GetRecords<Demo>(conditions).GetAwaiter().GetResult();
+            List<Demo> items = await new DemoTable()._dynamoDBService.GetRecords<Demo>(conditions);
 
             Console.WriteLine(JsonSerializer.Serialize(items, new JsonSerializerOptions { WriteIndented = true }));
         }

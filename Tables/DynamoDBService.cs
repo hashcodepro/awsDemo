@@ -30,7 +30,7 @@ namespace awsDemos.Tables
             return obj;
         }
 
-        public async Task<T> GetRecord<T>(string key) where T : class => await dbContext.LoadAsync<T>(key);
+        public async Task<T> GetRecord<T>(string hashKey) where T : class => await dbContext.LoadAsync<T>(hashKey);
 
         public async Task UpdateRecord<T>(T item) where T : new()
         {
